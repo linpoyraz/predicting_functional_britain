@@ -1,7 +1,5 @@
 # Predicting functional consequences of recent natural selection in Britain 
 
-Description of files in this repository:
-
 ## figures/
 
 This directory includes all files and scripts required to generate all main figures in the manuscript. 
@@ -84,6 +82,6 @@ This script generates gene-level iHS scores in parallel for 22 chromosomes using
 
 ### scripts/data/
 
-This directory includes all output files required to run `expression.R`, `p_cutoff_time_series_regression.R` and `random_time_series_regression.R`. 
+This directory includes all files required to run `expression.R`, `p_cutoff_time_series_regression.R` and `random_time_series_regression.R`. 
 
 
