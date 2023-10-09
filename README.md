@@ -25,7 +25,7 @@ The output of the window-based genome-wide selection scan as described by [Mathi
 `s_scan_all_brit2_01_random_window.txt.gz` \
 The output of the window-based genome-wide selection scan with randomized date labels as described by [Mathieson and Terhorst 2022](https://genome.cshlp.org/content/32/11-12/2057). 
 
-`model_info.txt.gz` \ 
+`model_info.txt.gz` \
 Tissue information for the JTI models with the highest training $R^2$. 
 
 `imputation_results.txt.gz` \ 
@@ -38,14 +38,29 @@ Gene-level iHS scores. This file is the output of `iHS_parallel.sh`.
 Gene-level SDS scores. This file is the output of `SDS_parallel.sh`.
 
 ### figures/data/allele_frequency/
-This directory includes 
 
+This directory includes information regarding all SNPs included in the JTI model for all FDR significant transcriptome-wide scan genes. These files are the outputs of `allele_frequencies.R`. 
 
 ### figures/data/expression/
-This directory includes all files and scripts required to generate all main figures in the manuscript. 
 
+This directory includes the predicted expression of each FDR significant transcriptome-wide scan gene for all samples used in this manuscript. These files are the outputs of `expression.R`
 
 ## scripts/
+
+`allele_frequencies.R` \
+This script outputs dosage information and JTI weights for all SNPs included in the JTI model for the specified gene. Paths are absolute with regard to the cluster, so it won't be possible to run this script on another machine without significant editing.
+
+`expression.R` \
+This script outputs predicted expression of each FDR significant transcriptome-wide gene for all samples used in the manuscript. 
+
+### scripts/predict/
+
+This directory includes all scripts required to generate predicted gene expression values for all samples included in this manuscript. Paths are absolute with regard to the cluster, so it won't be possible to run this script on another machine without significant editing.
+
+
+
+
+
 
 ### scripts/iHS/
 
@@ -67,4 +82,8 @@ This script prepares UK10k SDS scores gathered from [Field et al. 2016](https://
 `SDS_parallel.sh` \
 This script generates gene-level iHS scores in parallel for 22 chromosomes using `SDS_results.R` (goes through each chromosome)and `SDS_scan_lite.R` (goes through each gene).
 
-### scripts/input/
+### scripts/data/
+
+This directory includes all output files required to run `expression.R`, `p_cutoff_time_series_regression.R` and `random_time_series_regression.R`. 
+
+
