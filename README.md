@@ -56,20 +56,20 @@ This script outputs predicted expression of each FDR significant transcriptome-w
 This directory includes all scripts required to generate predicted gene expression values for all samples included in this manuscript. Paths are absolute with regard to the cluster, so it won't be possible to run this script on another machine without significant editing.
 
 - `create_dosages.sh` \
-This script prepares ancient and 1K Genomes GBR files. 
+This script prepares ancient and 1K Genomes GBR files. It calls `vcf2dosageprob.py` to convert vcf files to dosage files, and `update_rsIDs.py` which updates rsIDs in a dosage file to the ones in PrediXcan model by genomic location. 
 
 - `prepare_predixcan_dir.R` \
 This script adds sample.txt file to the Predixcan directory. 
 
 - `run_predixcan.sh` \
-This script calls `PrediXcan.py` and generates predicred gene expression values for all samples. 
+This script calls `PrediXcan.py` and generates predicted gene expression values for all samples. 
 
 ### scripts/iHS/
 
 This directory includes scripts required to generate gene-level iHS scores. Paths are absolute with regard to the cluster, so it won't be possible to run these scripts on another machine without significant editing. The output of these scripts is included in `figures/data/iHS_results.txt.gz`. 
 
 - `iHS_generate.sh` \
-This script polarizes 1kg GBR variants using PanTro6 using `ancestral_match.R` and generates iHS scores using selscan. It then calls `iHS_split.R` to add ref/alt and rsid information to the normalized output. 
+This script polarizes 1kg GBR variants using PanTro6 using `ancestral_match.R`, calls `interpolate_map.R` to interpolate recombination maps, and generates iHS scores using selscan. It then calls `iHS_split.R` to add ref/alt and rsid information to the normalized output. 
 
 - `iHS_parallel.sh` \
 This script generates gene-level iHS scores in parallel for 22 chromosomes using `iHS_results.R` (goes through each chromosome)and `iHS_scan_lite.R` (goes through each gene).
