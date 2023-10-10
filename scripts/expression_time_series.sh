@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script runs transcriptome-wide selection scan 
+
 # make a directory for the output 
 mkdir -p output 
 

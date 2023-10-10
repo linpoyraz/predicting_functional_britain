@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Lin Poyraz 
+# This script splits Field et al. 2016 UK10K SDS results by chromosome
+
 my_dir=/project/mathilab/ppoyraz/scan/SDS
 mkdir -p ${my_dir}
 

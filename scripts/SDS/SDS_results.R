@@ -1,4 +1,6 @@
 # Lin Poyraz 
+# Usage: Rscript SDS_results.R <regression results> 
+
 library(qqman)
 library(data.table)
 library(dplyr)

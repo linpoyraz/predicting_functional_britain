@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Lin Poyraz 
+# Adapted from Laura Colbran 
+# This script calls Predixcan.py 
+
 module load python/2
 
 tiss=$1

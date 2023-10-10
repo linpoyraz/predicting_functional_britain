@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# this script runs SDS in parallel 
+# Lin Poyraz 
+# This script runs SDS in parallel 
+
 results=/project/mathilab/ppoyraz/time_series_predixcan/results/data/scan/SDS_split 
 regression=/project/mathilab/ppoyraz/time_series_predixcan/results/data/expression/time_series_regression_results.txt
 final=/project/mathilab/ppoyraz/time_series_predixcan/results/data/scan/SDS_results.txt

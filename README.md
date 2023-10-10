@@ -55,10 +55,14 @@ This script outputs predicted expression of each FDR significant transcriptome-w
 
 This directory includes all scripts required to generate predicted gene expression values for all samples included in this manuscript. Paths are absolute with regard to the cluster, so it won't be possible to run this script on another machine without significant editing.
 
+`create_dosages.sh` \
+This script prepares ancient and 1K Genomes GBR files. 
 
+`prepare_predixcan_dir.R`
+This script adds sample.txt file to the Predixcan directory. 
 
-
-
+`run_predixcan.sh`
+This script calls `PrediXcan.py` and generates predicred gene expression values for all samples. 
 
 ### scripts/iHS/
 

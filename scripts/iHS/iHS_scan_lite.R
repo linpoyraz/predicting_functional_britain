@@ -1,5 +1,5 @@
 # Lin Poyraz 
-# Usage: iHS_scan_lite.R <chr> <ensembl name> 
+# Usage: Rscript iHS_scan_lite.R <chr> <ensembl name> 
 
 library(data.table)
 library(RSQLite)

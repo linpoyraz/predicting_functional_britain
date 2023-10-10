@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Lin Poyraz 
+# This script generates mean imputation scores for all genes. 
+
 results=./output/imputation_results_split
 regression=./output/samples01_time_series_regression_results.txt
 final=./output/imputation_results.txt

@@ -1,4 +1,5 @@
 # Lin Poyraz 
+# Usage: Rscript prepare_predixcan_dir.R <dosage dir> 
 # Creates sample.txt file from a given directory 
 library(data.table)
 
