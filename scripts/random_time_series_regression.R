@@ -1,35 +1,30 @@
 # Lin Poyraz 
 # Usage: random_time_series_regression <expression file> 
 
+
 library(data.table)
+options(stringsAsFactors = FALSE)
+set.seed(444)
 
 args = commandArgs(trailingOnly=TRUE)
-set.seed(444) 
 
 print("reading in data...") 
 
-meta = read.table("./data/brit_meta.txt", header = T, sep = "\t")[,c(1,2)]
-names(meta) = c("iid", "time")
+meta = read.table("./data/brit_meta.txt", header = F, sep = "\t")[,c(1,2,4,5)]
+names(meta) = c("iid", "time", "lat", "long")
 meta$time = -as.numeric(meta$time)
+print(head(meta)) 
 
 # change gene names to human-identifiable names 
 names = read.table("./data/gencode.v26.GRCh38.all_genes.bed.gz", header = F, sep = "\t")[, c(4,5, 1, 2, 3)]
-names[,2] = gsub("\\..*", "", names[,2])
+names[,2] = as.character(gsub("\\..*", "", names[,2]))
 
 exp = read.table(paste(args[1], "/predicted_expression.txt.gz", sep = ""), header = T, sep = "\t")
 exp = exp[,2:ncol(exp)]
 names(exp)[1] = "iid"
 exp$time = rep(0, nrow(exp))
 
-print(nrow(exp))
-# remove ones with _published 
-i = which(!grepl(exp$iid, pattern = "_published"))
-print(length(i))
-exp = exp[i,]
-
 print ("adding time information...") 
-exp$iid = as.character(exp$iid)
-meta$iid = as.character(meta$iid) 
 
 # this sample is a problem we need to fix: 
 problem = which(exp$iid == "I5473_published")
@@ -37,7 +32,7 @@ exp$iid[problem] = "I5473"
 
 #fwrite(list(exp$iid[which(!grepl(exp$iid, pattern = "^HG0|_published"))]), "samples_all", quote = F, row.names = F, col.names = F, sep = "\t", na = NA)
 
-# read in samples to subset to (01)
+# read in samples to subset to 
 subset = read.table("./data/samples_01", header = F)
 print(head(subset))
 print("subset sample number")
@@ -109,15 +104,6 @@ print(head(results))
 print("adjusting p values and preparing output files...") 
 p = results$P.value
 
-# impose genomic control 
-chi_stat = qchisq(p, df = 1, lower.tail=F)
-lambda = median(chi_stat)/qchisq(0.5, df=1) #inflation factor
-print(lambda)
-corrected_p = pchisq(chi_stat/lambda, df=1, lower.tail=F)
-results$GC = corrected_p
-
-results$FDR = p.adjust(corrected_p, method = "fdr")
-results$Bonferroni = p.adjust(corrected_p, method = "bonferroni")
 
 # save results 
 f = paste("./output/samples01_random_time_series_regression_results.txt", sep = "")

@@ -1,29 +1,30 @@
 # Lin Poyraz 
-# Usage: p_cutoff_time_series_regression.R <expression directory> <output directory> <sample name file>
+# Usage: random_time_series_regression <expression file> 
 
 library(data.table)
-options(stringsAsFactors = FALSE)
-
 
 args = commandArgs(trailingOnly=TRUE)
+set.seed(444) 
 
 print("reading in data...") 
 
-meta = read.table("./data/brit_meta.txt", header = F, sep = "\t")[,c(1,2,4,5)]
-names(meta) = c("iid", "time", "lat", "long")
+meta = read.table("./data/brit_meta.txt", header = T, sep = "\t")[,c(1,2)]
+names(meta) = c("iid", "time")
 meta$time = -as.numeric(meta$time)
-print(head(meta)) 
 
 # change gene names to human-identifiable names 
 names = read.table("./data/gencode.v26.GRCh38.all_genes.bed.gz", header = F, sep = "\t")[, c(4,5, 1, 2, 3)]
-names[,2] = as.character(gsub("\\..*", "", names[,2]))
+names[,2] = gsub("\\..*", "", names[,2])
 
 exp = read.table(paste(args[1], "/predicted_expression.txt.gz", sep = ""), header = T, sep = "\t")
 exp = exp[,2:ncol(exp)]
 names(exp)[1] = "iid"
 exp$time = rep(0, nrow(exp))
 
+
 print ("adding time information...") 
+exp$iid = as.character(exp$iid)
+meta$iid = as.character(meta$iid) 
 
 # this sample is a problem we need to fix: 
 problem = which(exp$iid == "I5473_published")
@@ -31,8 +32,8 @@ exp$iid[problem] = "I5473"
 
 #fwrite(list(exp$iid[which(!grepl(exp$iid, pattern = "^HG0|_published"))]), "samples_all", quote = F, row.names = F, col.names = F, sep = "\t", na = NA)
 
-# read in samples to subset to 
-subset = read.table(paste("./data/", args[3], sep = ""), header = F)
+# read in samples to subset to (01)
+subset = read.table("./data/samples_01", header = F)
 print(head(subset))
 print("subset sample number")
 print(nrow(subset))
@@ -62,15 +63,25 @@ print("number of ancient individuals")
 print(sum(exp$time != 0))
 print("number of modern individuals")
 print(sum(exp$time == 0))
+
+
+print(sum(exp$time != 0))
+
+# randomize time
+exp$time = sample(exp$time)
+
 print("running linear regression, updating gene names...") 
 
 # run linear regression for each gene vs. time, store all p values and betas 
 genes = names(exp)[which(!names(exp) %in% c("iid", "time"))]
-print(length(genes))
 results = data.frame("chr" = genes, "start" = rep(1000, length(genes)), "end" = rep(1000, length(genes)), 
-	"Gene" = genes, "Ensembl" = genes, "P.value" = rep(1000, length(genes)), "FDR" = rep(1000, length(genes)), "Bonferroni" = rep(1000, length(genes)), "GC" = rep(1000, length(genes)), "Beta" = rep(1000, length(genes)), "SD" = rep(1000, length(genes)))
+	"Gene" = genes, "Ensembl" = genes, "P.value" = rep(1000, length(genes)), "FDR" = rep(1000, length(genes)), 
+	"Bonferroni" = rep(1000, length(genes)), "GC" = rep(1000, length(genes)), "Beta" = rep(1000, length(genes)))
 
-names = as.data.frame(names)
+results$chr = as.character(results$chr)
+results$Gene = as.character(results$Gene)
+results$Ensembl = as.character(results$Ensembl)
+
 for (i in 1:length(genes)){
 	gene = genes[i]
 	names_row = names[which(names[,2] == gene),]
@@ -82,16 +93,13 @@ for (i in 1:length(genes)){
 	model = lm(gene ~ time, data = dat)
 	results$P.value[i] = summary(model)$coefficients["time", 4]
 	results$Beta[i] = summary(model)$coefficients["time", 1]
+	results$chr[i] = names_row[,3]
 	results$start[i] = names_row[,4]
 	results$end[i] = names_row[,5]
-	results$SD[i] = sd(dat$gene)
-	results$chr[i] = names_row[,3]
 }
 
-
-print(head(results))
 results = na.omit(results) ##NA omitted 
-
+print(head(results))
 print("adjusting p values and preparing output files...") 
 p = results$P.value
 
@@ -106,8 +114,6 @@ results$FDR = p.adjust(corrected_p, method = "fdr")
 results$Bonferroni = p.adjust(corrected_p, method = "bonferroni")
 
 # save results 
-output = args[2]
-f = paste(output, "/", args[3], "time_series_regression_results.txt", sep = "") 
-fwrite(results[,which(!names(results) %in% c("SD"))], f, quote = F, row.names = F, col.names = T, sep = "\t", na = NA)
-print(head(results))
+f = paste("./output/samples01_random_time_series_regression_results.txt", sep = "")
+fwrite(results, f, quote = F, row.names = F, col.names = T, sep = "\t", na = NA)
 

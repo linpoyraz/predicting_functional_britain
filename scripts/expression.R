@@ -54,13 +54,16 @@ print(sum(exp$time != 0))
 print("number of modern individuals")
 print(sum(exp$time == 0))
 
+system("mkdir -p output")
+system("mkdir -p ./output/expression") 
 dir = "./output/expression/"
 
 
-genes = read.table("./data/fdr_sig.txt", header = T, sep = "\t")
+genes = read.table("./data/fdr_sig_all.txt", header = T, sep = "\t")
 
 for (i in 1:nrow(genes)){
 	gene = genes$Ensembl[i]
+	print(gene)
 	dat = exp[, c(gene, "time", "iid")]
 	names(dat) = c("gene", "time", "iid")
 	gene = genes$Gene[i]
